@@ -1,6 +1,10 @@
-export default () => {
+import getHashtagsElement from './make-task-hashtags.js';
+import getRepeatingDaysElement from './make-task-repeating-day.js';
+import {getDate, getTime, getDay} from './util.js';
+
+export default (task) => {
   return `
-    <article class="card card--edit card--black">
+    <article class="card card--${task.color} ${task.repeatingDays[getDay(task.dueDate)] ? `card--repeat` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
@@ -19,7 +23,7 @@ export default () => {
           </div>
 
           <div class="card__color-bar">
-            <svg width="100%" height="10">
+            <svg class="card__color-bar-wave" width="100%" height="10">
               <use xlink:href="#wave"></use>
             </svg>
           </div>
@@ -30,9 +34,7 @@ export default () => {
                 class="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-              >
-This is example of new task, you can add picture, set date and time, add tags.</textarea
-              >
+              >${task.title}</textarea>
             </label>
           </div>
 
@@ -43,21 +45,23 @@ This is example of new task, you can add picture, set date and time, add tags.</
                   date: <span class="card__date-status">no</span>
                 </button>
 
-                <fieldset class="card__date-deadline" disabled>
+                <fieldset class="card__date-deadline">
                   <label class="card__input-deadline-wrap">
                     <input
                       class="card__date"
                       type="text"
-                      placeholder="23 September"
+                      placeholder="${getDate(task.dueDate)}"
                       name="date"
+                      value="${getDate(task.dueDate)}"
                     />
                   </label>
                   <label class="card__input-deadline-wrap">
                     <input
                       class="card__time"
                       type="text"
-                      placeholder="11:15 PM"
+                      placeholder="${getTime(task.dueDate)}"
                       name="time"
+                      value="${getTime(task.dueDate)}"
                     />
                   </label>
                 </fieldset>
@@ -66,87 +70,17 @@ This is example of new task, you can add picture, set date and time, add tags.</
                   repeat:<span class="card__repeat-status">no</span>
                 </button>
 
-                <fieldset class="card__repeat-days" disabled>
+                <fieldset class="card__repeat-days">
                   <div class="card__repeat-days-inner">
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-mo-1"
-                      name="repeat"
-                      value="mo"
-                    />
-                    <label class="card__repeat-day" for="repeat-mo-1"
-                      >mo</label
-                    >
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-tu-1"
-                      name="repeat"
-                      value="tu"
-                      checked
-                    />
-                    <label class="card__repeat-day" for="repeat-tu-1"
-                      >tu</label
-                    >
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-we-1"
-                      name="repeat"
-                      value="we"
-                    />
-                    <label class="card__repeat-day" for="repeat-we-1"
-                      >we</label
-                    >
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-th-1"
-                      name="repeat"
-                      value="th"
-                    />
-                    <label class="card__repeat-day" for="repeat-th-1"
-                      >th</label
-                    >
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-fr-1"
-                      name="repeat"
-                      value="fr"
-                      checked
-                    />
-                    <label class="card__repeat-day" for="repeat-fr-1"
-                      >fr</label
-                    >
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      name="repeat"
-                      value="sa"
-                      id="repeat-sa-1"
-                    />
-                    <label class="card__repeat-day" for="repeat-sa-1"
-                      >sa</label
-                    >
-                    <input
-                      class="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-su-1"
-                      name="repeat"
-                      value="su"
-                      checked
-                    />
-                    <label class="card__repeat-day" for="repeat-su-1"
-                      >su</label
-                    >
+                    ${getRepeatingDaysElement(task.id, task.repeatingDays)}
                   </div>
                 </fieldset>
               </div>
 
               <div class="card__hashtag">
-                <div class="card__hashtag-list"></div>
+                <div class="card__hashtag-list">
+                  ${getHashtagsElement(task.tags)}
+                </div>
 
                 <label>
                   <input
@@ -159,14 +93,14 @@ This is example of new task, you can add picture, set date and time, add tags.</
               </div>
             </div>
 
-            <label class="card__img-wrap card__img-wrap--empty">
+            <label class="card__img-wrap">
               <input
                 type="file"
                 class="card__img-input visually-hidden"
                 name="img"
               />
               <img
-                src="img/add-photo.svg"
+                src="img/sample-img.jpg"
                 alt="task picture"
                 class="card__img"
               />
@@ -177,62 +111,62 @@ This is example of new task, you can add picture, set date and time, add tags.</
               <div class="card__colors-wrap">
                 <input
                   type="radio"
-                  id="color-black-1"
+                  id="color-black-6"
                   class="card__color-input card__color-input--black visually-hidden"
                   name="color"
                   value="black"
-                  checked
                 />
                 <label
-                  for="color-black-1"
+                  for="color-black-6"
                   class="card__color card__color--black"
                   >black</label
                 >
                 <input
                   type="radio"
-                  id="color-yellow-1"
+                  id="color-yellow-6"
                   class="card__color-input card__color-input--yellow visually-hidden"
                   name="color"
                   value="yellow"
                 />
                 <label
-                  for="color-yellow-1"
+                  for="color-yellow-6"
                   class="card__color card__color--yellow"
                   >yellow</label
                 >
                 <input
                   type="radio"
-                  id="color-blue-1"
+                  id="color-blue-6"
                   class="card__color-input card__color-input--blue visually-hidden"
                   name="color"
                   value="blue"
                 />
                 <label
-                  for="color-blue-1"
+                  for="color-blue-6"
                   class="card__color card__color--blue"
                   >blue</label
                 >
                 <input
                   type="radio"
-                  id="color-green-1"
+                  id="color-green-6"
                   class="card__color-input card__color-input--green visually-hidden"
                   name="color"
                   value="green"
+                  checked
                 />
                 <label
-                  for="color-green-1"
+                  for="color-green-6"
                   class="card__color card__color--green"
                   >green</label
                 >
                 <input
                   type="radio"
-                  id="color-pink-1"
+                  id="color-pink-6"
                   class="card__color-input card__color-input--pink visually-hidden"
                   name="color"
                   value="pink"
                 />
                 <label
-                  for="color-pink-1"
+                  for="color-pink-6"
                   class="card__color card__color--pink"
                   >pink</label
                 >

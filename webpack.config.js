@@ -15,14 +15,9 @@ module.exports = {
       use: `babel-loader`
     }]
   },
-  // plugins: [
-  //   new HtmlWebpackPlugin({
-  //     template: `./src/index.html`
-  //   })
-  // ],
   devServer: {
     contentBase: path.join(__dirname, `public`),
-    publicPath: 'http://localhost:8080/',
+    publicPath: `http://localhost:8080/`,
     hot: true,
     compress: true
   }
