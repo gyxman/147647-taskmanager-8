@@ -1,8 +1,10 @@
-import {getDate, getTime, createElement} from "./util";
+import {getDate, getTime} from "./util";
 import getHashtagsElement from "./make-task-hashtags";
+import {Component} from "./component";
 
-export class Task {
+export class Task extends Component {
   constructor(data) {
+    super();
     // this._id = data.id;
     this._title = data.title;
     this._dueDate = data.dueDate;
@@ -13,11 +15,8 @@ export class Task {
     // this._isFavorite = data.isFavorite;
     // this._isDone = data.isDone;
 
-    // this._state = {
-
-    // };
-
     this._onEdit = null;
+    this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   _isRepeated() {
@@ -28,10 +27,6 @@ export class Task {
     if (typeof this._onEdit === `function`) {
       this._onEdit();
     }
-  }
-
-  get element() {
-    return this._element;
   }
 
   set onEdit(fn) {
@@ -119,24 +114,13 @@ export class Task {
     </article>`.trim();
   }
 
-  bind() {
+  createListeners() {
     this._element.querySelector(`.card__btn--edit`)
-      .addEventListener(`click`, this._onEditButtonClick.bind(this));
+      .addEventListener(`click`, this._onEditButtonClick);
   }
 
-  unbind() {
+  removeListeners() {
     this._element.querySelector(`.card__btn--edit`)
-      .removeEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
+      .removeEventListener(`click`, this._onEditButtonClick);
   }
 }

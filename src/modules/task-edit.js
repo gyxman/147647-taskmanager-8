@@ -1,9 +1,11 @@
-import {getDate, getTime, createElement} from "./util";
+import {getDate, getTime} from "./util";
 import getRepeatingDaysElement from "./make-task-repeating-day";
 import getHashtagsElement from "./make-task-hashtags";
+import {Component} from "./component";
 
-export class TaskEdit {
+export class TaskEdit extends Component {
   constructor(data) {
+    super();
     this._id = data.id;
     this._title = data.title;
     this._dueDate = data.dueDate;
@@ -14,8 +16,8 @@ export class TaskEdit {
     // this._isFavorite = data.isFavorite;
     // this._isDone = data.isDone;
 
-    this._element = null;
     this._onSubmit = null;
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
   }
 
   _isRepeated() {
@@ -31,10 +33,6 @@ export class TaskEdit {
 
   set onSubmit(fn) {
     this._onSubmit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -218,24 +216,13 @@ export class TaskEdit {
     </article>`.trim();
   }
 
-  bind() {
+  createListeners() {
     this._element.querySelector(`.card__form`)
-      .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+      .addEventListener(`submit`, this._onSubmitButtonClick);
   }
 
-  unbind() {
+  removeListeners() {
     this._element.querySelector(`.card__form`)
-      .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
+      .removeEventListener(`submit`, this._onSubmitButtonClick);
   }
 }
