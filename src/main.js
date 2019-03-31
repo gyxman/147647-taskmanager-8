@@ -2,8 +2,8 @@ import {getRandomNumber} from './modules/util.js';
 import getFilterElement from './modules/make-filter.js';
 import {tasks} from './data/tasks-list.js';
 import {filters} from './data/filters-list.js';
-import {Task} from './modules/task.js';
-import {TaskEdit} from './modules/task-edit.js';
+import Task from './modules/task.js';
+import TaskEdit from './modules/task-edit.js';
 
 const getFilterTemplate = ()=> {
   const filtersContainer = document.querySelector(`.main__filter`);
@@ -42,7 +42,14 @@ const getTasksTemplate = (arrayTasks, count)=> {
       taskComponent.unrender();
     };
 
-    editTaskComponent.onSubmit = () => {
+    editTaskComponent.onSubmit = (newObject) => {
+      tasks[i].title = newObject.title;
+      tasks[i].tags = newObject.tags;
+      tasks[i].color = newObject.color;
+      tasks[i].repeatingDays = newObject.repeatingDays;
+      tasks[i].dueDate = newObject.dueDate;
+
+      taskComponent.update(tasks[i]);
       taskComponent.render();
       tasksContainer.replaceChild(taskComponent.element, editTaskComponent.element);
       editTaskComponent.unrender();

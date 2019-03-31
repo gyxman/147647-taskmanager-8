@@ -17,6 +17,7 @@ const getHashtagElement = (name) => {
   </span>`;
 };
 
+// TODO переписать на for of
 export default (hashtags) => {
   const hashtagsArray = [...hashtags];
   let hashtagsElement = ``;

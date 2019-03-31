@@ -1,8 +1,9 @@
-import {getDate, getTime} from "./util";
 import getHashtagsElement from "./make-task-hashtags";
 import {Component} from "./component";
+import Color from "../data/colors";
+import moment from "moment";
 
-export class Task extends Component {
+class Task extends Component {
   constructor(data) {
     super();
     // this._id = data.id;
@@ -35,7 +36,7 @@ export class Task extends Component {
 
   get template() {
     return `
-    <article class="card card--${this._color} ${this._isRepeated() ? `card--repeat` : ``}">
+    <article class="card ${Color[this._color]} ${this._isRepeated() ? `card--repeat` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
@@ -72,26 +73,7 @@ export class Task extends Component {
           <div class="card__settings">
             <div class="card__details">
               <div class="card__dates">
-                <fieldset class="card__date-deadline">
-                  <label class="card__input-deadline-wrap">
-                    <input
-                      class="card__date"
-                      type="text"
-                      placeholder="${getDate(this._dueDate)}"
-                      name="date"
-                      value="${getDate(this._dueDate)}"
-                    />
-                  </label>
-                  <label class="card__input-deadline-wrap">
-                    <input
-                      class="card__time"
-                      type="text"
-                      placeholder="${getTime(this._dueDate)}"
-                      name="time"
-                      value="${getTime(this._dueDate)}"
-                    />
-                  </label>
-                </fieldset>
+                ${moment(this._dueDate).format(`D MMMM h:mm`)}
               </div>
 
               <div class="card__hashtag">
@@ -123,4 +105,14 @@ export class Task extends Component {
     this._element.querySelector(`.card__btn--edit`)
       .removeEventListener(`click`, this._onEditButtonClick);
   }
+
+  update(data) {
+    this._title = data.title;
+    this._tags = data.tags;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
+    this._dueDate = data.dueDate;
+  }
 }
+
+export default Task;
