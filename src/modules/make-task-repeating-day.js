@@ -15,8 +15,8 @@ const getRepeatingDayElement = (id, name, value) => {
 export default (id, days) => {
   const daysArray = Object.entries(days);
   let daysElement = ``;
-  for (let i = 0; i < daysArray.length; i++) {
-    daysElement += getRepeatingDayElement(id, daysArray[i][0], daysArray[i][1]);
+  for (const day of daysArray) {
+    daysElement += getRepeatingDayElement(id, day[0], day[1]);
   }
 
   return daysElement;
