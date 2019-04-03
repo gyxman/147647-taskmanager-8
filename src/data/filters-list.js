@@ -1,4 +1,4 @@
-export const filters = [
+const filters = [
   `all`,
   `overdue`,
   `today`,
@@ -7,3 +7,5 @@ export const filters = [
   `tags`,
   `archive`
 ];
+
+export default filters;

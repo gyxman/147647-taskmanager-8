@@ -2,7 +2,7 @@ import {getDate, getTime} from "./util";
 import getRepeatingDaysElement from "./make-task-repeating-day";
 import getHashtagsElement from "./make-task-hashtags";
 import getColorsElement from "./make-task-colors";
-import {Component} from "./component";
+import Component from "./component";
 import Colors from "../data/colors";
 import flatpickr from "flatpickr";
 
@@ -18,12 +18,16 @@ class TaskEdit extends Component {
     this._repeatingDays = data.repeatingDays;
     // this._isFavorite = data.isFavorite;
     // this._isDone = data.isDone;
+    this.state = {
+      isDate: false,
+      isRepeated: false,
+      isDeleted: false,
+    };
 
     this._onSubmit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-
-    this._state.isDate = false;
-    this._state.isRepeated = false;
+    this._onDelete = null;
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
 
     this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeRepeated = this._onChangeRepeated.bind(this);
@@ -69,6 +73,13 @@ class TaskEdit extends Component {
     this.update(newData);
   }
 
+  _onDeleteButtonClick() {
+    if (typeof this._onDelete === `function`) {
+      this._state.isDeleted = !this._state.isDeleted;
+      this._onDelete();
+    }
+  }
+
   _onChangeDate() {
     this._state.isDate = !this._state.isDate;
     this.removeListeners();
@@ -106,6 +117,10 @@ class TaskEdit extends Component {
 
   set onSubmit(fn) {
     this._onSubmit = fn;
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
   }
 
   get template() {
@@ -232,6 +247,8 @@ class TaskEdit extends Component {
   createListeners() {
     this._element.querySelector(`.card__form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.card__delete`)
+      .addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
       .addEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
@@ -249,6 +266,8 @@ class TaskEdit extends Component {
   removeListeners() {
     this._element.querySelector(`.card__form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.card__delete`)
+      .removeEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
       .removeEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
