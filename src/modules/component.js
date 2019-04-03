@@ -1,6 +1,6 @@
 import {createElement} from "./util";
 
-export class Component {
+class Component {
   constructor() {
     if (new.target === Component) {
       throw new Error(`Can't instantiate Component, only concrete one.`);
@@ -33,3 +33,5 @@ export class Component {
 
   removeListeners() {}
 }
+
+export default Component;

@@ -1,5 +1,5 @@
 import getHashtagsElement from "./make-task-hashtags";
-import {Component} from "./component";
+import Component from "./component";
 import Color from "../data/colors";
 import moment from "moment";
 

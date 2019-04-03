@@ -40,3 +40,9 @@ export const createElement = (template) => {
 
   return newElement.firstChild;
 };
+
+export const getColorsArray = (count = 10) => {
+  const colors = [`#ff3cb9`, `#ffe125`, `#0c5cdd`, `#000000`, `#31b55c`, `#bcd7ff`, `#ce7878`, `#b85050`, `#32cd32`, `#adff2f`];
+  colors.length = count;
+  return colors;
+};

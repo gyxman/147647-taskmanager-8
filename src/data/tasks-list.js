@@ -1,6 +1,6 @@
 import {getRandomBoolean} from "../modules/util";
 
-export const tasks = [
+const tasks = [
   {
     id: 1,
     title: [
@@ -37,6 +37,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 2,
@@ -74,6 +75,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 3,
@@ -111,6 +113,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 4,
@@ -148,6 +151,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 5,
@@ -185,6 +189,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 6,
@@ -222,6 +227,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 7,
@@ -259,6 +265,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 8,
@@ -296,6 +303,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 9,
@@ -333,6 +341,7 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   },
   {
     id: 10,
@@ -370,5 +379,8 @@ export const tasks = [
     },
     isFavorite: getRandomBoolean(),
     isDone: getRandomBoolean(),
+    isDeleted: false,
   }
 ];
+
+export default tasks;
