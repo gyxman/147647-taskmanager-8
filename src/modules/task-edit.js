@@ -41,13 +41,13 @@ class TaskEdit extends Component {
       tags: new Set(),
       dueDate: new Date(),
       repeatingDays: {
-        'Mo': false,
-        'Tu': false,
-        'We': false,
-        'Th': false,
-        'Fr': false,
-        'Sa': false,
-        'Su': false,
+        'mo': false,
+        'tu': false,
+        'we': false,
+        'th': false,
+        'fr': false,
+        'sa': false,
+        'su': false,
       }
     };
 
@@ -75,8 +75,7 @@ class TaskEdit extends Component {
 
   _onDeleteButtonClick() {
     if (typeof this._onDelete === `function`) {
-      this._state.isDeleted = !this._state.isDeleted;
-      this._onDelete();
+      this._onDelete({id: this._id});
     }
   }
 
@@ -283,6 +282,38 @@ class TaskEdit extends Component {
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
     this._dueDate = data.dueDate;
+  }
+
+  block() {
+    const controls = this.element.querySelectorAll(`input, textarea, button`);
+    controls.forEach((element) => element.disable = true);
+  }
+
+  unblock() {
+    const controls = this._element.querySelectorAll(`input, textarea, button`);
+    const saveButton = this._element.querySelector(`.card__save`);
+    const deleteButton = this._element.querySelector(`.card__delete`);
+    controls.forEach((element) => element.disable = false);
+    saveButton.textContent = `save`;
+    deleteButton.textContent = `delete`;
+  }
+
+  saving() {
+    const button = this._element.querySelector(`.card__save`);
+    button.textContent = 'Saving...';
+  }
+
+  deleting() {
+    const button = this._element.querySelector(`.card__delete`);
+    button.textContent = 'Deleting...';
+  }
+
+  shake() {
+    this._element.classList.add(`shake`);
+  }
+
+  unshake() {
+    this._element.classList.remove(`shake`);
   }
 
   static createMapper(target) {
