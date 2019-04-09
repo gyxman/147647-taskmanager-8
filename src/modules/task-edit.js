@@ -296,7 +296,7 @@ class TaskEdit extends Component {
     const saveButton = this._element.querySelector(`.card__save`);
     const deleteButton = this._element.querySelector(`.card__delete`);
     controls.forEach((element) => {
-      element.disable = false
+      element.disable = false;
     });
     saveButton.textContent = `save`;
     deleteButton.textContent = `delete`;
