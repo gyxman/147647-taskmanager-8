@@ -286,26 +286,30 @@ class TaskEdit extends Component {
 
   block() {
     const controls = this.element.querySelectorAll(`input, textarea, button`);
-    controls.forEach((element) => element.disable = true);
+    controls.forEach((element) => {
+      element.disable = true;
+    });
   }
 
   unblock() {
     const controls = this._element.querySelectorAll(`input, textarea, button`);
     const saveButton = this._element.querySelector(`.card__save`);
     const deleteButton = this._element.querySelector(`.card__delete`);
-    controls.forEach((element) => element.disable = false);
+    controls.forEach((element) => {
+      element.disable = false
+    });
     saveButton.textContent = `save`;
     deleteButton.textContent = `delete`;
   }
 
   saving() {
     const button = this._element.querySelector(`.card__save`);
-    button.textContent = 'Saving...';
+    button.textContent = `Saving...`;
   }
 
   deleting() {
     const button = this._element.querySelector(`.card__delete`);
-    button.textContent = 'Deleting...';
+    button.textContent = `Deleting...`;
   }
 
   shake() {
