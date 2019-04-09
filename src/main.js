@@ -1,17 +1,23 @@
-import tasks from './data/tasks-list.js';
 import filters from './data/filters-list.js';
 import Task from './modules/task.js';
 import TaskEdit from './modules/task-edit.js';
 import Statistics from './modules/statistics.js';
 import Filter from "./modules/filter";
 import moment from "moment";
+import API from "./modules/api";
+
+const AUTHORIZATION = `Basic lT2LMSQGFTKYBS72vZ5`;
+const END_POINT = `https://es8-demo-srv.appspot.com/task-manager`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 const filtersWrapper = document.querySelector(`.main__filter`);
 const tasksControl = document.querySelector(`#control__task`);
+const noTasksContainer = document.querySelector(`.board__no-tasks`);
 const tasksContainer = document.querySelector(`.board__tasks`);
 const tasksBoardContainer = document.querySelector(`.board.container`);
 const statisticsContainer = document.querySelector(`.statistic.container`);
 const statisticsControl = document.querySelector(`#control__statistic`);
+let tasks = [];
 
 
 const filterTasks = (data, filterName)=> {
@@ -44,8 +50,7 @@ const getFiltersTemplate = (filtersData, tasksData) => {
 
     filterComponent.onFilter = () => {
       const filteredTasks = filterTasks(tasksData, item);
-      tasksContainer.innerHTML = ``;
-      showTasks(filteredTasks, filteredTasks.length);
+      renderTasks(filteredTasks);
     };
 
     filtersWrapper.appendChild(filterComponent.render());
@@ -54,46 +59,97 @@ const getFiltersTemplate = (filtersData, tasksData) => {
 
 getFiltersTemplate(filters, tasks);
 
-const deleteTask = (arrayTasks, i) => {
-  arrayTasks[i].isDeleted = true;
-  return arrayTasks;
-};
-
-const showTasks = (arrayTasks = tasks, count = tasks.length)=> {
-  const cards = arrayTasks.filter((it) => !it.isDeleted);
+const renderTasks = (arrayTasks)=> {
+  // const cards = arrayTasks.filter((it) => !it.isDeleted);
   tasksBoardContainer.classList.remove(`visually-hidden`);
   statisticsContainer.classList.add(`visually-hidden`);
   tasksContainer.innerHTML = ``;
 
-  for (let i = 0; i < count; i++) {
-    const taskComponent = new Task(cards[i]);
-    const editTaskComponent = new TaskEdit(cards[i]);
+  for (let task of arrayTasks) {
+    const taskComponent = new Task(task);
+    const editTaskComponent = new TaskEdit(task);
     taskComponent.onEdit = () => {
       editTaskComponent.render();
       tasksContainer.replaceChild(editTaskComponent.element, taskComponent.element);
       taskComponent.unrender();
     };
 
+    // editTaskComponent.onSubmit = (newObject) => {
+    //   cards[i] = Object.assign({}, cards[i], newObject);
+    //
+    //   taskComponent.update(cards[i]);
+    //   taskComponent.render();
+    //   tasksContainer.replaceChild(taskComponent.element, editTaskComponent.element);
+    //   editTaskComponent.unrender();
+    // };
+
     editTaskComponent.onSubmit = (newObject) => {
-      cards[i] = Object.assign({}, cards[i], newObject);
+      task.title = newObject.title;
+      task.tags = newObject.tags;
+      task.color = newObject.color;
+      task.repeatingDays = newObject.repeatingDays;
+      task.dueDate = newObject.dueDate;
 
-      taskComponent.update(cards[i]);
-      taskComponent.render();
-      tasksContainer.replaceChild(taskComponent.element, editTaskComponent.element);
-      editTaskComponent.unrender();
+      api.updateTask({id: task.id, data: task.toRAW()})
+        .then((newTask) => {
+          editTaskComponent.block();
+          editTaskComponent.saving();
+          taskComponent.update(newTask);
+          taskComponent.render();
+
+          tasksContainer.replaceChild(taskComponent.element, editTaskComponent.element);
+
+          editTaskComponent.unrender();
+        }).catch(() => {
+          editTaskComponent.shake();
+          setTimeout(() => {
+            editTaskComponent.unshake();
+            editTaskComponent.unblock();
+          }, 300);
+        });
     };
 
-    editTaskComponent.onDelete = () => {
-      deleteTask(cards, i);
-      tasksContainer.removeChild(editTaskComponent.element);
-      editTaskComponent.unrender();
+    editTaskComponent.onDelete = (id) => {
+      api.deleteTask(id)
+        .then(() => {
+          editTaskComponent.block();
+          editTaskComponent.deleting();
+          api.getTasks()
+        })
+        .then(() => {
+          tasksContainer.removeChild(editTaskComponent.element);
+        }).catch(() => {
+          editTaskComponent.shake();
+          setTimeout(() => {
+            editTaskComponent.unshake();
+            editTaskComponent.unblock();
+          }, 300);
+        });
     };
+
     tasksContainer.appendChild(taskComponent.render());
   }
 };
 
-showTasks(tasks, 7);
-tasksControl.addEventListener(`click`, showTasks);
+const setStart = () => {
+  noTasksContainer.classList.remove(`visually-hidden`);
+  noTasksContainer.innerHTML = `Loading tasks...`;
+  tasksContainer.classList.add(`visually-hidden`);
+};
+setStart();
+
+api.getTasks()
+  .then((items) => {
+    tasks = items; // set local tasks
+    noTasksContainer.classList.add(`visually-hidden`);
+    tasksContainer.classList.remove(`visually-hidden`);
+    renderTasks(tasks);
+  }).catch(() => {
+    noTasksContainer.innerHTML = `Something went wrong while loading your tasks. Check your connection or try again later`;
+  });
+
+// renderTasks(tasks, 7);
+// tasksControl.addEventListener(`click`, renderTasks);
 
 const showStatistics = ()=> {
   statisticsContainer.innerHTML = ``;
